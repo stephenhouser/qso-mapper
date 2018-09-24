@@ -1,0 +1,105 @@
+<html>
+	<head>
+		<style>
+            body {
+                background: rgb(243, 244, 245);
+                xheight: 100%;
+                color: rgb(100, 108, 127);
+                line-height: 1.4rem;
+                font-family: Roboto, "Open Sans", sans-serif;
+                font-size: 20px;
+                font-weight: 300;
+                text-rendering: optimizeLegibility;
+            }
+            
+            h1 { 
+				text-align: center; 
+			}
+
+            .center { 
+				text-align: center; 
+			}
+		</style>
+	</head>
+	<body>
+		<h1>ADIF Mapper</h1>
+		<input type="file" id="input" onchange="handleFiles(this.files)">
+		<script>
+			// Check for the various File API support.
+			if (window.File && window.FileReader && window.FileList && window.Blob) {
+				// Great success! All the File APIs are supported.
+			} else {
+				alert('The File APIs are not fully supported in this browser.');
+			}
+
+			var inputElement = document.getElementById("input");
+				inputElement.addEventListener("change", handleFiles, false);
+
+			function parseADIFLine1(line) {
+				fields = line.split('<');
+
+				if (fields.length <= 1) {
+					return null;
+				}
+
+				qso = {};
+				for (var f = 0; f < fields.length; f++) {
+					field_value = fields[f].match(/(.+?):\d+\>(.+)/);
+					if (field_value !== null) {
+						qso[field_value[1]] = field_value[2];
+					}
+				}
+
+				return qso;
+			}
+
+			function parseADIFLine(qsoLine) {
+
+				qso = {};
+				fields = qsoLine.match(/\<(.+?):.+?\>([^\<]+)/g);
+				console.log(fields);
+				for (var f = 0; f < fields.length; f++) {
+					field_value = fields[f].match(/\<(.+?):.+?\>(.*)/);
+					if (field_value !== null) {
+						qso[field_value[1]] = field_value[2];
+					}
+				}
+				return qso;
+			}
+
+			function readADIFFile(file) {
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					var fileData = e.target.result;
+					fileData = fileData.replace(/(\r\n\t|\n|\r\t)/gm, '');
+
+					var fileMatch = fileData.match(/(.*)\<eoh>(.*)/);
+					if (fileMatch && fileMatch.length == 3) {
+						body = fileMatch[2];
+						qsoMatches = body.match(/(.*?)\<eor\>/g);
+						for (var q = 0; q < qsoMatches.length; q++) {
+							// console.log(qsoMatches[q]);
+							qso = parseADIFLine(qsoMatches[q]);
+							console.log(qso);
+						}
+					} else {
+						alert('Invalid ADIF file. Cannot find header marker <eoh>.');
+					}
+				};
+
+				reader.readAsText(file);
+			}
+		
+
+
+
+			function handleFiles(files) {
+				var numFiles = files.length;
+				for (var i = 0, numFiles = files.length; i < numFiles; i++) {
+					var file = files[i];
+					readADIFFile(file);
+				}
+			}
+		</script>
+	</body>
+</html>
