@@ -1,105 +1,80 @@
-<html>
-	<head>
-		<style>
-            body {
-                background: rgb(243, 244, 245);
-                xheight: 100%;
-                color: rgb(100, 108, 127);
-                line-height: 1.4rem;
-                font-family: Roboto, "Open Sans", sans-serif;
-                font-size: 20px;
-                font-weight: 300;
-                text-rendering: optimizeLegibility;
-            }
-            
-            h1 { 
-				text-align: center; 
-			}
+<!doctype html>
+<html lang="en">
 
-            .center { 
-				text-align: center; 
-			}
-		</style>
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<meta name="description" content="QSO/ADIF Mapper">
+		<meta name="author" content="Stephen Houser">
+
+		<link rel="icon" href="favicon.ico">
+
+		<title>QSO/ADIF Mapper</title>
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+		 crossorigin="anonymous">
+
+		<!-- Custom styles for this template -->
+		<link href="qsl-mapper.css" rel="stylesheet">
+		<script src="qsl-mapper.js"></script>
 	</head>
 	<body>
-		<h1>ADIF Mapper</h1>
-		<input type="file" id="input" onchange="handleFiles(this.files)">
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+			<a class="navbar-brand" href="#">QSL Mapper</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+				aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+	
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="#">Map <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">About</a>
+					</li>
+				</ul>
+				<form class="form-inline">
+					<div class="custom-file">
+						<input type="file" class="custom-file-input mr-sm-2" id="fileInput" aria-describedby="fileHelp" onchange="handleFiles(this.files)">
+						<label class="custom-file-label" for="fileInput"">Select file</label>
+					</div>
+				</form>
+				<button class="btn btn-danger m-1" onclick="clearMarkers()">Reset</button>
+			</div>
+		</nav>
+	
+		<div id="map-canvas">
+		</div>
+
+		<script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp&callback=initMap"></script>
+
+		<!-- Bootstrap Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+		crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+		crossorigin="anonymous"></script>
 		<script>
-			// Check for the various File API support.
-			if (window.File && window.FileReader && window.FileList && window.Blob) {
-				// Great success! All the File APIs are supported.
-			} else {
-				alert('The File APIs are not fully supported in this browser.');
-			}
+			$(window).resize(function () {
+				var h = $(window).height(),
+					offsetTop = 50; // Calculate the top offset
 
-			var inputElement = document.getElementById("input");
-				inputElement.addEventListener("change", handleFiles, false);
+				$('#map-canvas').css('height', (h - offsetTop));
+			}).resize();
 
-			function parseADIFLine1(line) {
-				fields = line.split('<');
-
-				if (fields.length <= 1) {
-					return null;
-				}
-
-				qso = {};
-				for (var f = 0; f < fields.length; f++) {
-					field_value = fields[f].match(/(.+?):\d+\>(.+)/);
-					if (field_value !== null) {
-						qso[field_value[1]] = field_value[2];
-					}
-				}
-
-				return qso;
-			}
-
-			function parseADIFLine(qsoLine) {
-
-				qso = {};
-				fields = qsoLine.match(/\<(.+?):.+?\>([^\<]+)/g);
-				console.log(fields);
-				for (var f = 0; f < fields.length; f++) {
-					field_value = fields[f].match(/\<(.+?):.+?\>(.*)/);
-					if (field_value !== null) {
-						qso[field_value[1]] = field_value[2];
-					}
-				}
-				return qso;
-			}
-
-			function readADIFFile(file) {
-				var reader = new FileReader();
-				reader.onload = function (e) {
-					var fileData = e.target.result;
-					fileData = fileData.replace(/(\r\n\t|\n|\r\t)/gm, '');
-
-					var fileMatch = fileData.match(/(.*)\<eoh>(.*)/);
-					if (fileMatch && fileMatch.length == 3) {
-						body = fileMatch[2];
-						qsoMatches = body.match(/(.*?)\<eor\>/g);
-						for (var q = 0; q < qsoMatches.length; q++) {
-							// console.log(qsoMatches[q]);
-							qso = parseADIFLine(qsoMatches[q]);
-							console.log(qso);
-						}
-					} else {
-						alert('Invalid ADIF file. Cannot find header marker <eoh>.');
-					}
-				};
-
-				reader.readAsText(file);
-			}
-		
-
-
-
-			function handleFiles(files) {
-				var numFiles = files.length;
-				for (var i = 0, numFiles = files.length; i < numFiles; i++) {
-					var file = files[i];
-					readADIFFile(file);
-				}
-			}
+			$('#fileInput').on('change', function () {
+				var fileName = $(this).val();
+				fileName = fileName.replace('C:\\fakepath\\', '');
+				$(this).next('.custom-file-label').html(fileName);
+			})
 		</script>
 	</body>
 </html>

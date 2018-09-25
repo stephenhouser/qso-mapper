@@ -1,0 +1,24 @@
+body {
+  padding-top: 3rem;
+}
+
+.starter-template {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.custom-file-label {
+	display: inline !important;
+}
+
+#map-canvas {
+	min-height: 240px;
+	height: 100%;
+	width: 100%;
+	margin: 0px;
+	padding: 0px
+}
+
+.qso h1 {
+	font-size: 2rem;
+}
