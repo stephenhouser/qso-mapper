@@ -39,13 +39,13 @@
 						<a class="nav-link" href="#">About</a>
 					</li>
 				</ul>
-				<form class="form-inline">
+				<form id="fileUpload" class="form-inline">
 					<div class="custom-file">
 						<input type="file" class="custom-file-input mr-sm-2" id="fileInput" aria-describedby="fileHelp" onchange="handleFiles(this.files)">
 						<label class="custom-file-label" for="fileInput"">Select file</label>
 					</div>
 				</form>
-				<button class="btn btn-danger m-1" onclick="clearMarkers()">Reset</button>
+				<button id="resetMarkers" class="btn btn-danger m-1" ">Reset</button>
 			</div>
 		</nav>
 	
@@ -74,7 +74,12 @@
 				var fileName = $(this).val();
 				fileName = fileName.replace('C:\\fakepath\\', '');
 				$(this).next('.custom-file-label').html(fileName);
-			})
+			});
+
+			$('#resetMarkers').on('click', function () {
+				$('#fileUpload')[0].reset();
+				clearMarkers();
+			});
 		</script>
 	</body>
 </html>
