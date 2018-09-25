@@ -58,7 +58,7 @@ function addMarkerForQSO(qso) {
 
 function clearMarkers() {
 	for (var i = 0; i < markers.length; i++) {
-		markers[i].setMap(map);
+		markers[i].setMap(null);
 	}
 
 	markers = [];
