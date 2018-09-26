@@ -1,0 +1,9 @@
+[submodule "4ad8c1878165fc7125cb547431a2bdaa"]
+	path = 4ad8c1878165fc7125cb547431a2bdaa
+	url = git@gist.github.com:4ad8c1878165fc7125cb547431a2bdaa.git
+[submodule "HamGrid"]
+	path = HamGrid
+	url = git@gist.github.com:4ad8c1878165fc7125cb547431a2bdaa.git
+[submodule "HamGridSquare"]
+	path = HamGridSquare
+	url = git@gist.github.com:4ad8c1878165fc7125cb547431a2bdaa.git
