@@ -17,9 +17,12 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
 		crossorigin="anonymous">
 
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
 		<!-- Custom styles for this template -->
-		<link href="qsl-mapper.css" rel="stylesheet">
-		<script src="qsl-mapper.js"></script>
+		<link href="qso-mapper.css" rel="stylesheet">
+		<script src="HamGridSquare/HamGridSquare.js"></script>
+		<script src="adif.js"></script>
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -31,14 +34,14 @@
 
 			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
 				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="index.html">Map</a>
+					</li>
 					<li class="nav-item active">
-						<a class="nav-link" href="#">Map <span class="sr-only">(current)</span></a>
+						<a class="nav-link" href="grid.html">Grid <span class="sr-only">(current)</span></a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="grid.html">Grid</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">About</a>
+						<a class="nav-link" href="about.html">About</a>
 					</li>
 				</ul>
 			</div>
@@ -47,45 +50,83 @@
 		<main role="main" class="container">
 		
 			<div class="starter-template">
-				<h1>Bootstrap starter template</h1>
-				<p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a
-					mostly barebones HTML document.</p>
+				<h1>Maidenhead Locator Conversion</h1>
+				<p class="lead">Convert latitude and longitude to a Maidenhead (grid square) locator or a locator to corresponding
+					latitude and longitude.</p>
 			</div>
-
 			<form onsubmit="event.preventDefault(); computeGridSquare();">
-				<div class="form-group">
-					<label for="inputLatitude">Latitude</label>
-					<input id="inputLatitude"
-						type="text" class="form-control" 
-						required pattern="[-+]?[0-9]*\.?[0-9]+"
-						aria-describedby="latitudeHelp" placeholder="43.686292">
-					<small id="latitudeHelp" class="form-text text-muted">In decimal form, example: 43.686292</small>
+				<div class="row">
+					<div class="form-group col">
+						<label for="inputLatitude">Latitude</label>
+						<input id="inputLatitude"
+							type="text" class="form-control" 
+							pattern="[-+]?[0-9]*\.?[0-9]+"
+							aria-describedby="latitudeHelp" placeholder="43.686292">
+						<small id="latitudeHelp" class="form-text text-muted">In decimal form, example: 43.686292</small>
+					</div>
+					<div class="form-group col">
+						<label for="inputLongitude">Longitude</label>
+						<input id="inputLongitude"
+							type="text" class="form-control" 
+							pattern="[-+]?[0-9]*\.?[0-9]+"
+							placeholder="-70.549876">
+						<small id="longitudeHelp" class="form-text text-muted">In decimal form, example: -70.549876</small>
+					</div>
 				</div>
-				<div class="form-group">
-					<label for="inputLongitude">Longitude</label>
-					<input id="inputLongitude"
-						type="text" class="form-control" 
-						required pattern="[-+]?[0-9]*\.?[0-9]+"
-						placeholder="-70.549876">
-					<small id="longitudeHelp" class="form-text text-muted">In decimal form, example: -70.549876</small>
-				</div>
-				
-				<button type="submit" class="btn btn-primary">Grid Square</button>
 
-				<div class="form-group">
-					<label for="inputGridsquare">Maidenhead Gridsquare</label>
-					<input type="text" class="form-control" id="inputGridsquare" placeholder="Calculated">
+				<div class="row text-center">
+					<div class="col">
+						<button type="submit" class="btn btn-primary" onclick="event.preventDefault(); computeGridSquare();">
+							<i class="fa fa-arrow-down"></i> to Grid Square <i class="fa fa-arrow-down"></i>
+						</button>
+						<button type="submit" class="btn btn-primary" onclick="event.preventDefault(); computeLatitudeLongitude();">
+							<i class="fa fa-arrow-up"></i> to Latitude/Longitude <i class="fa fa-arrow-up"></i>
+						</button>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col">
+						<label for="inputGridsquare">Maidenhead Gridsquare</label>
+						<input id="inputGridsquare"
+							type="text" class="form-control"
+							pattern="[A-X][A-X][0-9][0-9]([a-x][a-x])?"
+							placeholder="FN43rq">
+						<small id="longitudeHelp" class="form-text text-muted">4 or 6 character locator, example: FN43rq</small>
+					</div>
 				</div>
 			</form>
+
+			<div class="row text-center">
+				<div class="col">
+					<button type="submit" class="btn btn-primary" onclick="event.preventDefault(); showOnMap();">
+						Show on Map
+					</button>
+				</div>
+			</div>
 		</main>
 
 		<script>
-
 			function computeGridSquare(form) {
 				var lat = parseFloat(document.getElementById('inputLatitude').value);
 				var lon = parseFloat(document.getElementById('inputLongitude').value);
 				var gridField = document.getElementById('inputGridsquare');
+				
 				gridField.value = gridForLatLon(lat, lon);
+			}
+			function computeLatitudeLongitude(form) {
+				var latField = document.getElementById('inputLatitude');
+				var lonField = document.getElementById('inputLongitude');
+				var grid = document.getElementById('inputGridsquare').value;
+
+				var [lat, lon] = latLonForGrid(grid);
+				latField.value = lat;
+				lonField.value = lon;
+			}
+
+			function showOnMap() {
+				var lat = parseFloat(document.getElementById('inputLatitude').value);
+				var lon = parseFloat(document.getElementById('inputLongitude').value);
+				window.open('https://www.google.com/maps/search/?api=1&query=' + lat + ',' + lon);
 			}
 		</script>
 
