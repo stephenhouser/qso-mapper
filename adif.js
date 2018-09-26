@@ -1,4 +1,5 @@
 
+
 function parseADIF(adifFileData) {
 	var qsos = [];
 
