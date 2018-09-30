@@ -46,14 +46,13 @@ function removeMarker(marker) {
 			_markers.splice(markerIndex, 1);
 		}
 
-		marker.setMap(null);
+		marker.remove();
 	}
 }
 
 function removeAllMarkers() {
-	for (var i = 0; i < _markers.length; i++) {
-		_markers[i].setMap(null);
+	while (_markers.length > 0) {
+		var marker = _markers.pop();
+		removeMarker(marker);
 	}
-
-	_markers = [];
 }
