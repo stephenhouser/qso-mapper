@@ -28,6 +28,7 @@
 		<link href="qso-mapper.css" rel="stylesheet">
 		<script src="HamGridSquare/HamGridSquare.js"></script>
 		<script src="adif.js"></script>
+		<script src="google-map.js"></script>
 		<script src="qso-mapper.js"></script>
 	</head>
 	<body>
@@ -52,7 +53,7 @@
 				</ul>
 				<form id="fileUpload" class="form-inline">
 					<div class="custom-file">
-						<input type="file" class="custom-file-input mr-sm-2" id="fileInput" aria-describedby="fileHelp" onchange="handleFiles(this.files)">
+						<input type="file" class="custom-file-input mr-sm-2" id="fileInput" aria-describedby="fileHelp">
 						<label class="custom-file-label" for="fileInput"">Select file</label>
 					</div>
 				</form>
@@ -63,6 +64,9 @@
 		<div id="map-canvas">
 		</div>
 
+		<!-- Google Maps -->
+		<script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp&callback=initQsoMapper"></script>
+
 		<!-- Bootstrap Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -72,7 +76,7 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 		crossorigin="anonymous"></script>
 		<script>
-			initMap();
+			//initQsoMapper();
 			
 			$(window).resize(function () {
 				var h = $(window).height(),
@@ -81,15 +85,20 @@
 				$('#map-canvas').css('height', (h - offsetTop));
 			}).resize();
 
-			$('#fileInput').on('change', function () {
-				var fileName = $(this).val();
-				fileName = fileName.replace('C:\\fakepath\\', '');
-				$(this).next('.custom-file-label').html(fileName);
-			});
+			// // Update file name when a file is chosen
+			// document.getElementById('fileInput').onchange = function() {
+			// 	var fileName = this.value;
+			// 	fileName = fileName.replace('C:\\fakepath\\', '');
+			// 	var nameLabels = this.parentNode.getElementsByClassName('custom-file-label');
+			// 	if (nameLabels !== null && nameLabels.length >= 1) {
+			// 		nameLabels[0].innerHTML = fileName;
+			// 	}
+			// }
 
+			// Call removeAllMarkers when 'Reset' is clicked and reset fileName
 			$('#resetMarkers').on('click', function () {
 				$('#fileUpload')[0].reset();
-				clearMarkers();
+				removeAllMarkers();
 			});
 		</script>
 	</body>
