@@ -13,7 +13,7 @@ Both ways require you to get your own *access token* for the map provider you ch
 
 This method is inteded to be used to view a log of contacts (QSOs) that you have on your computer in [ADIF format][adif]. The application works in this mode by default.
 
-    [Upload QSO Map Example](https://stephenhouser.com/qso-mapper)
+   [Upload QSO Map Example](https://stephenhouser.com/qso-mapper)
 
 By using `Select file...` at the top-right of the application window you can upload a local [ADIF file][adif]. The QSOs in the file will be loaded and shown on the interactive map as markers or Maidenhead (grid square) Locators. The `Reset` button will clear the markers so you can load a different file. You can load multiple files, just don't click `Reset` between each load and the new QSOs will be added to the current ones.
 
@@ -23,7 +23,7 @@ When using the application this way, the map is not directly sharable with other
 
 This method allows you to show and share a log of your contacts. You upload your [ADIF file][adif] to a website and then others can see the QSOs mapped directly, without uploading anything.
 
-    [Shared QSO Map Example](https://stephenhouser.com/qso-mapper?url=sample/short.adi)
+   [Shared QSO Map Example](https://stephenhouser.com/qso-mapper?url=sample/short.adi)
 
 The application loads a web-accessible [ADIF file][adif] and displays it on the map. The file could be on another server or in the same location (or same repository) as the application code.
 
