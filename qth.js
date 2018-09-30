@@ -47,7 +47,13 @@ function fromQth(qth) {
 		//return new GLatLng(lat, lng);
 } // fromQth()
 
-console.log(fromQth('FN43rq'));
+// FN43AA00AA
+// FN53AA00AA
+// FN54AA00AA
+// FN44AA00AA
+// FN43AA00AA
+//43.686347  Longitude: -70.54988
+console.log(fromQth('FN43rq44ar'));
 
 function findQth(qth) {
 	qthLen = qth.length;

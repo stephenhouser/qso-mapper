@@ -131,6 +131,8 @@ function addMarkerForQso(qso) {
 		return null;
 	}
 
+	maidenheadGrid(qso.gridsquare);
+
 	var [latitude, longitude] = latlon;
 	var popupText = '<div class="qso">' +
 		'<h1>' + qso.call + '</h1><hr/>' +
@@ -206,4 +208,104 @@ function requestADIFFromURL(url) {
 	}
 
 	makeRequest(url);
+}
+
+// FN43AA00AA
+// FN53AA00AA
+// FN54AA00AA
+// FN44AA00AA
+// FN43AA00AA
+
+// return character for character code
+function chr(x) { 
+	return String.fromCharCode(x); 
+}
+
+// return character code for character
+function ord(c) { 
+	return c.charCodeAt(0)
+}
+
+function floor(x) { return Math.floor(x); }
+
+function grids(lat, lng) {
+	var qth = '';
+	lat += 90; lng += 180;
+	lat = lat / 10 + 0.0000001;
+	lng = lng / 20 + 0.0000001;
+	qth += chr(65 + lng) + chr(65 + lat);
+	lat = 10 * (lat - floor(lat));
+	lng = 10 * (lng - floor(lng));
+	qth += chr(48 + lng) + chr(48 + lat);
+	lat = 24 * (lat - floor(lat));
+	lng = 24 * (lng - floor(lng));
+	qth += chr(65 + lng) + chr(65 + lat);
+	lat = 10 * (lat - floor(lat));
+	lng = 10 * (lng - floor(lng));
+	qth += chr(48 + lng) + chr(48 + lat);
+	lat = 24 * (lat - floor(lat));
+	lng = 24 * (lng - floor(lng));
+	qth += chr(65 + lng) + chr(65 + lat);
+	return qth;
+} 
+
+
+function latlon(qth) {
+	var i = 0;
+	var l = new Array();
+
+	qth = qth.toUpperCase();
+	while (i < 10) {
+		l[i] = isNaN(qth.charCodeAt(i)) ? 0 : qth.charCodeAt(i) - 65;
+		i++;
+	}
+	console.log(l);
+
+	l[2] += 17; l[3] += 17;
+	l[6] += 17; l[7] += 17;
+
+	console.log(l);
+
+	var lng = (l[0] * 20 + l[2] * 2 + l[4] / 12 + l[6] / 120 + l[8] / 2880 - 180);
+	var lat = (l[1] * 10 + l[3] + l[5] / 24 + l[7] / 240 + l[9] / 5760 - 90);
+	return [lat, lng];
+}
+
+//FN43RQ00AA
+//FN43SQ00AA
+//FN43SR00AA
+//FN43RR00AA
+
+//FN43SR00AA
+// returns 4 points of rectangle
+// [lat, lon], [lat, lon], [lat, lon], [lat, lon]
+function maidenheadGrid(locator) {
+	var prefix = locator.substring(0, locator.length - 2);
+	var c1 = ord(locator.substring(locator.length - 2, locator.length - 1));
+	var c2 = ord(locator.substring(locator.length - 1, locator.length));
+	var g1 = prefix + chr(c1) + chr(c2) //+ "00AA00AA".substring(locator.length - 2);
+	var g2 = prefix + chr(c1 + 1) + chr(c2) //+ "00AA00AA".substring(locator.length - 2);
+	var g3 = prefix + chr(c1 + 1) + chr(c2 + 1) //+ "00AA00AA".substring(locator.length - 2);
+	var g4 = prefix + chr(c1) + chr(c2 + 1) //+ "00AA00AA".substring(locator.length - 2);
+
+	console.log(locator + ' parses to ' + prefix + ' ' + c1 + ' ' + c2);
+
+	console.log(g1);
+	console.log(g2);
+	console.log(g3);
+	console.log(g4);
+
+	var polygon = L.polygon([
+		latLonForGrid(g1),
+		latLonForGrid(g2),
+		latLonForGrid(g3),
+		latLonForGrid(g4)
+	]).addTo(_map);
+
+	// var polygon = L.polygon([
+	// 	latlon(g1),
+	// 	latlon(g2),
+	// 	latlon(g3),
+	// 	latlon(g4)
+	// ]).addTo(_markerFeatureGroup);
 }

@@ -48,7 +48,6 @@ function createMap(mapDivName) {
  */
 function createMarker(latitude, longitude, popupText) {
 	var marker = L.marker([latitude, longitude])
-	// marker.addTo(_map)
 	marker.addTo(_markerFeatureGroup)
 		.bindPopup(popupText);
 
