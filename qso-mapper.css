@@ -4,8 +4,7 @@ html, body {
 }
 
 body {
-	padding-top: 3em;
-	padding-bottom: 1em;
+	padding-top: 3.5rem;
 }
 
 .starter-template {
@@ -21,7 +20,6 @@ body {
 	/* height: calc ( 100vh - 6rem ); */
 	height: 100%;
 	width: 100%;
-	margin: 1em auto;
   border: 2px dashed black;
 }
 
