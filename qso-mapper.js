@@ -290,8 +290,7 @@ function maidenheadGrid(locator) {
 
 	console.log(locator + ' parses to ' + prefix + ' ' + c1 + ' ' + c2);
 
-	console.log(g1);
-	console.log(g2);
+	console.log(g1); console.log(latlon(g1));
 	console.log(g3);
 	console.log(g4);
 
