@@ -11,12 +11,31 @@ var openInfoWindow = null;
 
 var qth = null;
 
+// function initMap() {
+// 	map = new google.maps.Map(document.getElementById("map-canvas"), {
+// 		center: { lat: 43.686292, lng: -70.549876 },
+//     	zoom: 3,
+//     	mapTypeId: "terrain"
+//   });
+// }
 function initMap() {
-	map = new google.maps.Map(document.getElementById('map-canvas'), {
-		center: { lat: 40, lng: -30 },
-		zoom: 3,
-		mapTypeId: 'terrain',
-	});
+	var map = L.map("map-canvas").setView([43.686292, -70.549876], 10);
+	
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox.streets'
+	}).addTo(map);
+
+	// mapLink =
+	// 	'<a href="http://openstreetmap.org">OpenStreetMap</a>';
+	// L.tileLayer(
+	// 	'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	// 		attribution: '&copy; ' + mapLink + ' Contributors',
+	// 		maxZoom: 18,
+	// 	}).addTo(map);
 }
 
 function clearMarkers() {

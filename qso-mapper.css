@@ -1,5 +1,11 @@
+html, body {
+	height: 100%;
+	width: 100%;
+}
+
 body {
-  padding-top: 3rem;
+	padding-top: 3em;
+	padding-bottom: 1em;
 }
 
 .starter-template {
@@ -12,17 +18,19 @@ body {
 }
 
 #map-canvas {
-	min-height: 240px;
+	/* height: calc ( 100vh - 6rem ); */
 	height: 100%;
 	width: 100%;
-	margin: 0px;
-	padding: 0px
+	margin: 1em auto;
+	height:95%;
+  border: 2px dashed black;
+	/* margin: 0px;
+	padding: 0px */
 }
 
 .qso h1 {
 	font-size: 2rem;
 }
-
 
 input:invalid {
   border: 2px dashed red;
