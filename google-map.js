@@ -3,7 +3,7 @@
  * map = createMap(mapDivName)
  * marker = createMarker(map)
  * removeMarker(map, marker)
- * remoceAllMarkers(map)
+ * removeAllMarkers(map)
  */
 
 var _map = null;
