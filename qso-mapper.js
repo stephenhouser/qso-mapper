@@ -120,6 +120,7 @@ function loadQsosFromADIF(adifString, addMarkerFunc) {
 	for (var q = 0; q < qsos.length; q++) {
 		addMarkerFunc(qsos[q]);
 	}
+	zoomToAllMarkers();
 }
 
 /* addMarkerForQso - add a marker to the map for a given QSO */

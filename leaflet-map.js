@@ -14,6 +14,7 @@
 /* Internal variables */
 var _map = null;
 var _markers = [];
+var _markerFeatureGroup = null;
 var mapAttribution = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
 	'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
 	'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
@@ -28,12 +29,14 @@ var mapTileFormat = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
  * of the map library.
  */
 function createMap(mapDivName) {
-	_map = L.map(mapDivName).setView([43.686292, -70.549876], 10);
+	_map = L.map(mapDivName).setView([43.686292, -70.549876], 3);
 
 	L.tileLayer(mapTileFormat, {
-		maxZoom: 3,
 		attribution: mapAttribution,
 	}).addTo(_map);
+
+	_markerFeatureGroup = new L.featureGroup();
+	_markerFeatureGroup.addTo(_map);
 
 	return _map;
 }
@@ -45,7 +48,8 @@ function createMap(mapDivName) {
  */
 function createMarker(latitude, longitude, popupText) {
 	var marker = L.marker([latitude, longitude])
-	marker.addTo(_map)
+	// marker.addTo(_map)
+	marker.addTo(_markerFeatureGroup)
 		.bindPopup(popupText);
 
 	_markers.push(marker);
@@ -72,4 +76,8 @@ function removeAllMarkers() {
 		var marker = _markers.pop();
 		removeMarker(marker);
 	}
+}
+
+function zoomToAllMarkers() {
+	_map.fitBounds(_markerFeatureGroup.getBounds(), { padding: L.point(40, 40) });
 }
