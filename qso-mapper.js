@@ -12,12 +12,23 @@ function initQsoMapper() {
 	document.getElementById('fileInput').onchange = function () {
 		var fileName = this.value;
 		fileName = fileName.replace('C:\\fakepath\\', '');
-		var nameLabels = this.parentNode.getElementsByClassName('custom-file-label');
-		if (nameLabels !== null && nameLabels.length >= 1) {
-			nameLabels[0].innerHTML = fileName;
-		}
+		setFileInputLabel(fileName);
 
 		uploadFiles(this.files);
+	}
+
+	// Call removeAllMarkers when 'Reset' is clicked and reset fileName
+	document.getElementById('resetMarkers').onclick = function () {
+		setFileInputLabel('Select file...');
+		removeAllMarkers();
+	};
+}
+
+function setFileInputLabel(message) {
+	var fileUploadForm = document.getElementById('fileUpload');
+	var fileLabels = fileUploadForm.getElementsByClassName('custom-file-label');
+	if (fileLabels !== null && fileLabels.length >= 1) {
+		fileLabels[0].innerHTML = message;
 	}
 }
 
