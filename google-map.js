@@ -1,9 +1,9 @@
-// *** *** Map Functions *** ***
-/*
+/* Required Map functions:
+ *
  * map = createMap(mapDivName)
- * marker = createMarker(map)
- * removeMarker(map, marker)
- * removeAllMarkers(map)
+ * marker = createMarker(latitude, longitude, popupText)
+ * removeMarker(marker)
+ * removeAllMarkers()
  */
 
 var _map = null;

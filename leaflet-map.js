@@ -3,11 +3,12 @@
 var _map = null;
 var _markers = [];
 
-/*
+/* Required Map functions:
+ *
  * map = createMap(mapDivName)
- * marker = createMarker(map)
- * removeMarker(map, marker)
- * removeAllMarkers(map)
+ * marker = createMarker(latitude, longitude, popupText)
+ * removeMarker(marker)
+ * removeAllMarkers()
  */
 
 var mapAttribution = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
