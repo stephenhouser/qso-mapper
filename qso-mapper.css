@@ -22,10 +22,7 @@ body {
 	height: 100%;
 	width: 100%;
 	margin: 1em auto;
-	height:95%;
   border: 2px dashed black;
-	/* margin: 0px;
-	padding: 0px */
 }
 
 .qso h1 {

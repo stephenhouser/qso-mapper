@@ -5,33 +5,45 @@
 // 	alert('The File APIs are not fully supported in this browser.');
 // }
 
+var mapElementName = 'map-canvas';
+var fileUploadFormName = 'fileUpload';
+var fileInputFieldName = 'fileInput'
+
 function initQsoMapper() {
-	createMap('map-canvas');
+	createMap(mapElementName);
 
 	// Update file name when a file is chosen
-	document.getElementById('fileInput').onchange = function () {
-		var fileName = this.value;
-		fileName = fileName.replace('C:\\fakepath\\', '');
-		setFileInputLabel(fileName);
-
-		uploadFiles(this.files);
-	}
+	document.getElementById(fileInputFieldName).addEventListener('change', handleUploadFile);
 
 	// Call removeAllMarkers when 'Reset' is clicked and reset fileName
-	document.getElementById('resetMarkers').onclick = function () {
-		setFileInputLabel('Select file...');
-		removeAllMarkers();
-	};
+	document.getElementById('resetMarkers').addEventListener('click', handleResetUpload);
 }
 
+// handle when upload file is triggered
+function handleUploadFile() {
+	var fileName = this.value;
+	fileName = fileName.replace('C:\\fakepath\\', '');
+	setFileInputLabel(fileName);
+
+	uploadFiles(this.files);
+}
+
+// handle pressing of the 'reset' button
+function handleResetUpload() {
+	setFileInputLabel('Select file...');
+	removeAllMarkers();
+}
+
+// set the current 'uploaded' file name
 function setFileInputLabel(message) {
-	var fileUploadForm = document.getElementById('fileUpload');
+	var fileUploadForm = document.getElementById(fileUploadFormName);
 	var fileLabels = fileUploadForm.getElementsByClassName('custom-file-label');
 	if (fileLabels !== null && fileLabels.length >= 1) {
 		fileLabels[0].innerHTML = message;
 	}
 }
 
+// upload/process files
 function uploadFiles(files) {
 	var numFiles = files.length;
 	for (var i = 0, numFiles = files.length; i < numFiles; i++) {
