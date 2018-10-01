@@ -78,19 +78,22 @@ function handleUploadFile() {
 	// For each file object uploaded...(usually only one).
 	for (var i = 0; i < this.files.length; i++) {
 	    loadQSOsFromFile(this.files[i]);
-  	}
+	  }
 }
 
 /* handleResetUpload - handle pressing of the 'reset' button
  *
  * - Removes any markers from the map
- * - Resets the file upload form
+ * - Resets the form so a file with the same name can be loaded again.
  */
 function handleResetUpload() {
 	setFileInputLabel('Select file...');
 	removeAllMarkers();
-}
+	removeAllPolygons();
 
+	var fileUploadForm = document.getElementById(fileUploadFormName);
+	fileUploadForm.reset();
+}
 
 /* loadQSOsFromFile - loads QSOs from uploaded file */
 function loadQSOsFromFile(file) {
@@ -141,9 +144,39 @@ function loadQSOsFromURL(url) {
 function addQsosToMap(qsos) {
 	for (var q = 0; q < qsos.length; q++) {
 		addMarkerForQso(qsos[q]);
+		addSquareForQSO(qsos[q]);
 	}
 
 	zoomToAllMarkers();
+}
+
+/* addSquareForQso - add a polygon to the map to outline QSO grid square 
+ *
+ * Color squares where the QSO has a latitude and longitude green
+ * Other squares are default colored (blue).
+ */
+function addSquareForQSO(qso) {
+	var square = squareForQso(qso);
+	if (square === null) {
+		return null;
+	}
+
+	// This is specifit to Leaflet.js and may not work on Google Maps.
+	var options = { };
+	if (typeof (qso.lat) === 'string' && typeof (qso.lon) === 'string') {
+		options['color'] = 'green';
+	}
+
+	var [[top, left], [bottom, right]] = square;
+	polygon = createPolygon(
+		[[top, left], 
+		[top, right], 
+		[bottom, right], 
+		[bottom, left]],
+		options
+	);
+
+	return polygon;
 }
 
 /* addMarkerForQso - add a marker to the map for a given QSO */
@@ -173,7 +206,20 @@ function addMarkerForQso(qso) {
  * [lat, lng], [lat, lng], [lat, lng], [lat, lng]
  */
 function squareForQso(qso) {
-	// TODO: implament squareForQso()
+	var gridsquare = qso.gridsquare
+	if (typeof (qso.gridsquare) === 'string' && qso.gridsquare !== '') {
+
+		var gsLen = gridsquare.length;
+
+		var topLeftSquare = gridsquare + 'AA00AA00AA'.substring(gsLen);
+		var botRightSquare = gridsquare + 'RR99XX99XX'.substring(gsLen);
+
+		var [top, left] = loc2latlng(topLeftSquare);
+		var [bottom, right] = loc2latlng(botRightSquare);
+		return [[top, left], [bottom, right]];
+	}
+
+	return null;
 }
 
 /* latLonForQSO - get the latitude and longitude for a QSO
@@ -185,15 +231,13 @@ function squareForQso(qso) {
  * 	https://gist.github.com/stephenhouser/4ad8c1878165fc7125cb547431a2bdaa
  */
 function latLonForQso(qso) {
-	if (typeof (qso.lat) === 'string' && typeof (qso.lon) === 'string') {
-		var latitude = parseCoordinate(qso.lat);
-		var longitude = parseCoordinate(qso.lon);
-		return [latitude, longitude];
-	}
-
-	if (typeof (qso.gridsquare) === 'string' 
-		&& (qso.gridsquare.length == 4 || qso.gridsquare.length == 6)) {
-		var [latitude, longitude] = latLonForGrid(qso.gridsquare);
+	// if (typeof (qso.lat) === 'string' && typeof (qso.lon) === 'string') {
+	// 	var latitude = parseCoordinate(qso.lat);
+	// 	var longitude = parseCoordinate(qso.lon);
+	// 	return [latitude, longitude];
+	// }
+	if (typeof (qso.gridsquare) === 'string' && qso.gridsquare !== '') {
+		var [latitude, longitude] = loc2latlng(qso.gridsquare);
 		return [latitude, longitude];
 	}
 

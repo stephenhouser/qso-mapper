@@ -30,7 +30,7 @@ function _n2l(number) {
 	return 'abcdefghijklmnopqrstuvwxyz'.charAt(number);
 }
 
-function latl_n2loc(latitude, longitude, precision) {
+function latln2loc(latitude, longitude, precision) {
 	if (latitude === null || longitude === null) {
 		return null;
 	}
@@ -116,7 +116,7 @@ function loc2latlng(locator) {
 }
 
 
-var [lat, lng] = loc2latlng('FN43rq');
-console.log(lat + ', ' + lng);
-var loc = latl_n2loc(lat, lng);
-console.log(loc);
+// var [lat, lng] = loc2latlng('FN43rq');
+// console.log(lat + ', ' + lng);
+// var loc = latl_n2loc(lat, lng);
+// console.log(loc);

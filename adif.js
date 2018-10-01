@@ -63,17 +63,18 @@ function parseCoordinate(dms) {
 			dd = -dd;
 		}
 
+		console.log('DMS=' + dms + '==>' + dd);
 		return dd;
 	}
 
 	// Ex: 43° 41' 11'' N     -70° 32' 60'' W 
 	fullDMSMatch = dms.match(/([+-][0-9]{1,2})°?\s+([0-9]{1,2})'?\s+([0-9]{1,2})(["']{1,2})?\s+([NSEW])/);
 	if (fullDMSMatch != null) {
-		var [_, degrees, minutes, seconds, _, direction] = coordinate.match(/([+-][0-9]{1,2})°?\s+([0-9]{1,2})'?\s+([0-9]{1,2})(["']{1,2})?\s+([NSEW])/);
+		var [_, degrees, minutes, seconds, _, hemisphere] = coordinate.match(/([+-][0-9]{1,2})°?\s+([0-9]{1,2})'?\s+([0-9]{1,2})(["']{1,2})?\s+([NSEW])/);
 		var dd = parseInt(degrees) + (parseFloat(minutes) / 60) + (parseFloat(seconds) / 60 / 60);
-		if (direction == 'S' || direction == 'W') {
-			dd = -dd;
-		}
+		if (hemisphere === 'S' || hemisphere === 'W') {
+      		dd = -1 * dd;
+    	}
 
 		return dd;
 	}
