@@ -63,7 +63,6 @@ function parseCoordinate(dms) {
 			dd = -dd;
 		}
 
-		console.log('DMS=' + dms + '==>' + dd);
 		return dd;
 	}
 
