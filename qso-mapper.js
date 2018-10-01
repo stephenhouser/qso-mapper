@@ -91,24 +91,13 @@ function handleResetUpload() {
 	removeAllMarkers();
 }
 
-/* setFileInputLabel - set the current 'uploaded' file name
- *
- * Utility function to set the last loaded file name on the file upload
- * form.
- */
-function setFileInputLabel(message) {
-	var fileUploadForm = document.getElementById(fileUploadFormName);
-	var fileLabels = fileUploadForm.getElementsByClassName('custom-file-label');
-	if (fileLabels !== null && fileLabels.length >= 1) {
-		fileLabels[0].innerHTML = message;
-	}
-}
 
 /* loadQSOsFromFile - loads QSOs from uploaded file */
 function loadQSOsFromFile(file) {
 	var reader = new FileReader();
 	reader.onload = function (e) {
-		loadQsosFromADIF(e.target.result, addMarkerForQso);
+		var qsos = parseADIF(e.target.result);
+		addQsosToMap(qsos);
 	};
 
 	reader.readAsText(file);
@@ -124,15 +113,17 @@ function loadQSOsFromURL(url) {
 			alert("Giving up :( Cannot create an XMLHTTP instance");
 			return false;
 		}
-		httpRequest.onreadystatechange = alertContents;
+
+		httpRequest.onreadystatechange = readyStateChanged;
 		httpRequest.open("GET", url);
 		httpRequest.send();
 	}
 
-	function alertContents() {
+	function readyStateChanged() {
 		if (httpRequest.readyState === XMLHttpRequest.DONE) {
 			if (httpRequest.status === 200) {
-				loadQsosFromADIF(httpRequest.responseText, addMarkerForQso);
+				var qsos = parseADIF(httpRequest.responseText);
+				addQsosToMap(qsos);
 			} else {
 				alert("There was a problem loating " + url);
 			}
@@ -142,12 +133,16 @@ function loadQSOsFromURL(url) {
 	makeRequest(url);
 }
 
-/* loadQsosFromADIF - load QSOs from a single ADIF file */
-function loadQsosFromADIF(adifString, addMarkerFunc) {
-	var qsos = parseADIF(adifString);
+/* loadQsosFromADIF - load QSOs from an ADIF  (string) 
+ *
+ * - Calls addMarkerFunc(lat, lng, text) for each QSO
+ * - Calls zoomToAllMarkers to zoom the map to contain the markers.
+ */
+function addQsosToMap(qsos) {
 	for (var q = 0; q < qsos.length; q++) {
-		addMarkerFunc(qsos[q]);
+		addMarkerForQso(qsos[q]);
 	}
+
 	zoomToAllMarkers();
 }
 
@@ -158,8 +153,6 @@ function addMarkerForQso(qso) {
 		//throw "No location for qso";
 		return null;
 	}
-
-	//maidenheadGrid(qso.gridsquare);
 
 	var [latitude, longitude] = latlon;
 	var popupText = '<div class="qso">' +
@@ -172,6 +165,15 @@ function addMarkerForQso(qso) {
 
 	marker = createMarker(latitude, longitude, popupText);
 	return marker;
+}
+
+/* squareForQso - returns a polygon for the QSO's approximate location 
+ *
+ * top left, top right, bottom right, bottom left
+ * [lat, lng], [lat, lng], [lat, lng], [lat, lng]
+ */
+function squareForQso(qso) {
+	// TODO: implament squareForQso()
 }
 
 /* latLonForQSO - get the latitude and longitude for a QSO
@@ -198,6 +200,20 @@ function latLonForQso(qso) {
 	return null;
 }
 
+/* setFileInputLabel - set the current 'uploaded' file name
+ *
+ * Utility function to set the last loaded file name on the file upload
+ * form.
+ */
+function setFileInputLabel(message) {
+	var fileUploadForm = document.getElementById(fileUploadFormName);
+	var fileLabels = fileUploadForm.getElementsByClassName('custom-file-label');
+	if (fileLabels !== null && fileLabels.length >= 1) {
+		fileLabels[0].innerHTML = message;
+	}
+}
+
+/* getQueryVariable - get HTTP/URL query variable or null if it does not exist. */
 function getQueryVariable(variable) {
 	var query = window.location.search.substring(1);
 	var vars = query.split('&');
