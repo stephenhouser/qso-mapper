@@ -19,7 +19,7 @@ TODO: Enable loading ADIF files from URL query string and saving in local storag
 	- save in local storage
 */
 
-// var locator = require('./locator');
+// var Locator = require('./locator');
 
 /* Names of HTML DOM elements */
 var mapElementName = 'map-canvas';
@@ -101,7 +101,7 @@ function handleResetUpload() {
 function loadQSOsFromFile(file) {
 	var reader = new FileReader();
 	reader.onload = function (e) {
-		var qsos = parseADIF(e.target.result);
+		var qsos = Adif.parseAdif(e.target.result);
 		addQsosToMap(qsos);
 	};
 
@@ -216,8 +216,8 @@ function squareForQso(qso) {
 		var topLeftSquare = gridsquare + 'AA00AA00AA'.substring(gsLen);
 		var botRightSquare = gridsquare + 'RR99XX99XX'.substring(gsLen);
 
-		var [top, left] = locator.loc2latlon(topLeftSquare);
-		var [bottom, right] = locator.loc2latlon(botRightSquare);
+		var [top, left] = Locator.loc2latlon(topLeftSquare);
+		var [bottom, right] = Locator.loc2latlon(botRightSquare);
 		return [[top, left], [bottom, right]];
 	}
 
@@ -239,7 +239,7 @@ function latLonForQso(qso) {
 	// 	return [latitude, longitude];
 	// }
 	if (typeof (qso.gridsquare) === 'string' && qso.gridsquare !== '') {
-		var [latitude, longitude] = locator.loc2latlon(qso.gridsquare);
+		var [latitude, longitude] = Locator.loc2latlon(qso.gridsquare);
 		return [latitude, longitude];
 	}
 

@@ -146,7 +146,7 @@
 		var loc = latlon2loc(lat, lon);
 		console.log(loc);
 		testToGrid();
-		
+
 		// testToLatLon fails, see below
 		//testToLatLon();
 	}
@@ -218,7 +218,7 @@
 	if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
 		module.exports = locatorExports;
 	} else {
-		window.locator = locatorExports;
+		window.Locator = locatorExports;
 	}
 })();
 
