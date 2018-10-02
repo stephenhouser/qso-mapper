@@ -78,35 +78,17 @@
 			</div>
 		
 			<div id="call-log">
-				<table data-toggle="table" data-search="true" data-pagination="true">
+				<table id="call-table" data-toggle="table" data-search="true" data-pagination="true">
 					<thead>
 						<tr>
+							<th data-sortable="true" data-field="date_time">Date</th>
 							<th data-sortable="true" data-field="call">Call</th>
-							<th data-sortable="true" data-field="qso_date">Date</th>
 							<th data-sortable="true" data-field="band">Band</th>
+							<th data-sortable="true" data-field="mode">Mode</th>
+							<th data-sortable="true" data-field="gridsquare">Grid</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>N1SH</td>
-							<td>2018-09-29</td>
-							<td>20m</td>
-						</tr>
-						<tr>
-							<td>N1SH</td>
-							<td>2018-09-20</td>
-							<td>2m</td>
-						</tr>
-						<tr>
-							<td>N1SH</td>
-							<td>2018-10-29</td>
-							<td>80m</td>
-						</tr>
-						<tr>
-							<td>N1SH</td>
-							<td>2017-09-29</td>
-							<td>40m</td>
-						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -143,6 +125,8 @@
 					element.style.display = 'none';
 					menuLink.classList.add('active');
 				}
+
+				_map.invalidateSize()
 			}
 
 			function toggleLog(e) {

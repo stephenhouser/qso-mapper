@@ -72,7 +72,7 @@ function removePolygon(poly) {
 			_polygons.splice(polyIndex, 1);
 		}
 
-		polygon.remove();
+		poly.remove();
   	}
 }
 
@@ -80,7 +80,7 @@ function removePolygon(poly) {
 function removeAllPolygons() {
 	while (_polygons.length > 0) {
 		var poly = _polygons.pop();
-		removeMarker(poly);
+		removePolygon(poly);
 	}
 }
 

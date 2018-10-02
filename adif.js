@@ -34,7 +34,28 @@
 			}
 		}
 
+		qso = addDateTimeToQso(qso);
 		return qso;
+	}
+
+	/* addDateTimeToQso - Adds a computed `date_time` field to the QSO in memory.
+	 *
+	 * This is used later on when displaying the 
+	 */
+	function addDateTimeToQso(qso) {
+		var dString = qso.qso_date.substring(0, 4) + '/'
+			+ qso.qso_date.substring(4, 6) + '/'
+			+ qso.qso_date.substring(6);
+
+		var tString = qso.time_on.substring(0, 2) + ':'
+			+ qso.time_on.substring(2, 4);
+		if (qso.time_on.length > 4) {
+			tString = tString + ':' + qso.time_on.substring(4);
+		}
+
+		newQso = qso;
+		newQso['date_time'] = dString + ' ' + tString;
+		return newQso;
 	}
 
 	// `<name:len>data`
@@ -94,6 +115,7 @@
 	/* Export public functions */
 	var adifExports = {
 		parseAdif: parseAdif,
+		parseCoordinate: parseCoordinate,
 		test: testAll
 	};
 

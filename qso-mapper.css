@@ -27,7 +27,7 @@ body {
 	display: block;
 	height: 100%;
 	width: 100%;
-  border: 2px dashed black;
+  /* border: 2px dashed black; */
 }
 
 #call-log {

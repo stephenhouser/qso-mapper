@@ -50,7 +50,15 @@ function initQsoMapper() {
 	if (url !== null) {
 		disableFileUpload();
 		loadQSOsFromURL(url);
- 	}
+	 }
+
+	// TODO: Remove BootstrapTable jQuery
+	$('#call-log').on('click-cell.bs.table', function (field, value, row, element) {
+		// TODO: Popping up the popup is leaflet specific
+		if (qso.marker !== null) {
+			qso.marker.openPopup();
+		}
+	});
 }
 
 /* disableFileUpload - disable the file upload form and reset buttons
@@ -91,11 +99,17 @@ function handleUploadFile() {
  */
 function handleReset() {
 	setFileInputLabel('Select file...');
-	removeAllMarkers();
-	removeAllPolygons();
+
+	// removeAllMarkers();
+	// removeAllPolygons();
+	// qsos = [];
+	removeAllQsos();
 
 	var fileUploadForm = document.getElementById(fileUploadFormName);
 	fileUploadForm.reset();
+
+	// TODO: Remove BootstrapTable jQuery
+	$('#call-table').bootstrapTable('removeAll');
 }
 
 /* loadQSOsFromFile - loads QSOs from uploaded file */
@@ -104,8 +118,6 @@ function loadQSOsFromFile(file) {
 	reader.onload = function (e) {
 		var loadedQsos = Adif.parseAdif(e.target.result);
 		addQsosToMap(loadedQsos);
-
-		qsos.push.apply(qsos, loadedQsos);
 	};
 
 	reader.readAsText(file);
@@ -143,53 +155,56 @@ function loadQSOsFromURL(url) {
 	makeRequest(url);
 }
 
-/* loadQsosFromADIF - load QSOs from an ADIF  (string) 
+/* addQsosToMap - load QSOs from an ADIF  (string)
  *
  * - Calls addMarkerFunc(lat, lon, text) for each QSO
  * - Calls zoomToAllMarkers to zoom the map to contain the markers.
  */
 function addQsosToMap(qsos) {
 	for (var q = 0; q < qsos.length; q++) {
-		addMarkerForQso(qsos[q]);
-		addSquareForQSO(qsos[q]);
-
-		$("#call-log").bootstrapTable({ data: qsos });
+		addQsoToMap(qsos[q]);
 	}
+
+ 	// TODO: Remove BootstrapTable jQuery
+	$('#call-table').bootstrapTable('append', qsos);
 
 	zoomToAllMarkers();
 }
 
-function addLogForQso(qso) {
-
+function removeAllQsos() {
+	while (qsos.length > 0) {
+		var qso = qsos.pop();
+		removeQso(qso);
+	}
 }
 
-/* addSquareForQso - add a polygon to the map to outline QSO grid square 
+/* addQsoToMap - Add a single QSO to the Map
  *
- * Color squares where the QSO has a latitude and longitude green
- * Other squares are default colored (blue).
+ * - Calls addMarkerFunc(lat, lon, text) for each QSO
+ * - Calls zoomToAllMarkers to zoom the map to contain the markers.
  */
-function addSquareForQSO(qso) {
-	var square = squareForQso(qso);
-	if (square === null) {
-		return null;
+function addQsoToMap(qso) {
+	// Keep copies of the marker in the QSO. Might be a bad idea.
+	qso['marker'] = addMarkerForQso(qso);
+	qso['square'] = addSquareForQSO(qso);
+	qsos.push(qso);
+}
+
+function removeQso(qso) {
+	if (qso !== null) {
+		var qsoIndex = qsos.indexOf(qso);
+		if (qsoIndex > -1) {
+			qsos.splice(qsoIndex, 1);
+		}
+
+		if (typeof (qso.square) !== 'undefined') {
+			removePolygon(qso.square);
+		}
+
+		if (typeof (qso.marker) !== 'undefined') {
+			removeMarker(qso.marker);
+		}
 	}
-
-	// This is specifit to Leaflet.js and may not work on Google Maps.
-	var options = { };
-	if (typeof (qso.lat) === 'string' && typeof (qso.lon) === 'string') {
-		options['color'] = 'green';
-	}
-
-	var [[top, left], [bottom, right]] = square;
-	polygon = createPolygon(
-		[[top, left], 
-		[top, right], 
-		[bottom, right], 
-		[bottom, left]],
-		options
-	);
-
-	return polygon;
 }
 
 /* addMarkerForQso - add a marker to the map for a given QSO */
@@ -213,6 +228,35 @@ function addMarkerForQso(qso) {
 	return marker;
 }
 
+/* addSquareForQso - add a polygon to the map to outline QSO grid square 
+ *
+ * Color squares where the QSO has a latitude and longitude green
+ * Other squares are default colored (blue).
+ */
+function addSquareForQSO(qso) {
+	var square = squareForQso(qso);
+	if (square === null) {
+		return null;
+	}
+
+	// This is specifit to Leaflet.js and may not work on Google Maps.
+	var options = {};
+	if (typeof (qso.lat) === 'string' && typeof (qso.lon) === 'string') {
+		options['color'] = 'green';
+	}
+
+	var [[top, left], [bottom, right]] = square;
+	polygon = createPolygon(
+		[[top, left], 
+		[top, right], 
+		[bottom, right], 
+		[bottom, left]],
+		options
+	);
+
+	return polygon;
+}
+
 /* squareForQso - returns a polygon for the QSO's approximate location 
  *
  * top left, top right, bottom right, bottom left
@@ -221,7 +265,6 @@ function addMarkerForQso(qso) {
 function squareForQso(qso) {
 	var gridsquare = qso.gridsquare
 	if (typeof (qso.gridsquare) === 'string' && qso.gridsquare !== '') {
-
 		var gsLen = gridsquare.length;
 
 		var topLeftSquare = gridsquare + 'AA00AA00AA'.substring(gsLen);
@@ -244,11 +287,13 @@ function squareForQso(qso) {
  * 	https://gist.github.com/stephenhouser/4ad8c1878165fc7125cb547431a2bdaa
  */
 function latLonForQso(qso) {
-	// if (typeof (qso.lat) === 'string' && typeof (qso.lon) === 'string') {
-	// 	var latitude = parseCoordinate(qso.lat);
-	// 	var longitude = parseCoordinate(qso.lon);
-	// 	return [latitude, longitude];
-	// }
+	// TODO: Using lat and lon from the ADIF is sometime off from real position.
+	if (typeof (qso.lat) === 'string' && typeof (qso.lon) === 'string') {
+		var latitude = Adif.parseCoordinate(qso.lat);
+		var longitude = Adif.parseCoordinate(qso.lon);
+		return [latitude, longitude];
+	}
+
 	if (typeof (qso.gridsquare) === 'string' && qso.gridsquare !== '') {
 		var [latitude, longitude] = Locator.loc2latlon(qso.gridsquare);
 		return [latitude, longitude];
