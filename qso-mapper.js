@@ -19,6 +19,8 @@ TODO: Enable loading ADIF files from URL query string and saving in local storag
 	- save in local storage
 */
 
+// var locator = require('./locator');
+
 /* Names of HTML DOM elements */
 var mapElementName = 'map-canvas';
 var fileUploadFormName = 'fileUpload';
@@ -138,7 +140,7 @@ function loadQSOsFromURL(url) {
 
 /* loadQsosFromADIF - load QSOs from an ADIF  (string) 
  *
- * - Calls addMarkerFunc(lat, lng, text) for each QSO
+ * - Calls addMarkerFunc(lat, lon, text) for each QSO
  * - Calls zoomToAllMarkers to zoom the map to contain the markers.
  */
 function addQsosToMap(qsos) {
@@ -203,7 +205,7 @@ function addMarkerForQso(qso) {
 /* squareForQso - returns a polygon for the QSO's approximate location 
  *
  * top left, top right, bottom right, bottom left
- * [lat, lng], [lat, lng], [lat, lng], [lat, lng]
+ * [lat, lon], [lat, lon], [lat, lon], [lat, lon]
  */
 function squareForQso(qso) {
 	var gridsquare = qso.gridsquare
@@ -214,8 +216,8 @@ function squareForQso(qso) {
 		var topLeftSquare = gridsquare + 'AA00AA00AA'.substring(gsLen);
 		var botRightSquare = gridsquare + 'RR99XX99XX'.substring(gsLen);
 
-		var [top, left] = loc2latlng(topLeftSquare);
-		var [bottom, right] = loc2latlng(botRightSquare);
+		var [top, left] = locator.loc2latlon(topLeftSquare);
+		var [bottom, right] = locator.loc2latlon(botRightSquare);
 		return [[top, left], [bottom, right]];
 	}
 
@@ -237,7 +239,7 @@ function latLonForQso(qso) {
 	// 	return [latitude, longitude];
 	// }
 	if (typeof (qso.gridsquare) === 'string' && qso.gridsquare !== '') {
-		var [latitude, longitude] = loc2latlng(qso.gridsquare);
+		var [latitude, longitude] = locator.loc2latlon(qso.gridsquare);
 		return [latitude, longitude];
 	}
 
