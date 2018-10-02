@@ -17,7 +17,8 @@
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
 		 crossorigin="anonymous">
-
+		<!-- Bootstrap Table -- http://bootstrap-table.wenzhixin.net.cn -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
 
 		<!-- Custom styles for this template -->
 		<link href="qso-mapper.css" rel="stylesheet">
@@ -49,13 +50,18 @@
 			</button>
 	
 			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<div class="btn-group" role="group">
+					<button type="button" class="btn btn-primary" onclick="toggleMap(event);">Map</button>
+					<button type="button" class="btn btn-primary active" onclick="toggleLog(event);">Log</button>
+				</div>
+
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active">
-						<a class="nav-link" href="index.html">Map <span class="sr-only">(current)</span></a>
+					<!-- <li class="nav-item active">
+						<a class="nav-link active" href="#" onclick="toggleMap(event);">Map</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="grid.html">Grid</a>
-					</li>
+						<a class="nav-link" href="#" onclick="toggleCalLog(event);">Log</a>
+					</li> -->
 					<li class="nav-item">
 						<a class="nav-link" href="about.html">About</a>
 					</li>
@@ -66,11 +72,51 @@
 						<label class="custom-file-label" for="fileInput"">Select file...</label>
 					</div>
 				</form>
-				<button id="resetMarkers" class="btn btn-danger m-1" ">Reset</button>
+				<button id="resetButton" class="btn btn-danger m-1" ">Reset</button>
 			</div>
 		</nav>
 	
-		<div id="map-canvas">
+		<div id='container'>
+			<div id="map-canvas">
+			</div>
+		
+			<div id="call-log">
+				<table data-toggle="table" data-search="true" data-pagination="true">
+					<thead>
+						<tr>
+							<th data-sortable="true" data-field="call">Call</th>
+							<th data-sortable="true" data-field="qso_date">Date</th>
+							<th data-sortable="true" data-field="band">Band</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>N1SH</td>
+							<td>2018-09-29</td>
+							<td>20m</td>
+						</tr>
+						<tr>
+							<td>N1SH</td>
+							<td>2018-09-20</td>
+							<td>2m</td>
+						</tr>
+						<tr>
+							<td>N1SH</td>
+							<td>2018-10-29</td>
+							<td>80m</td>
+						</tr>
+						<tr>
+							<td>N1SH</td>
+							<td>2017-09-29</td>
+							<td>40m</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="background">
+				<h2>Show the Map or the Log</h2>
+				<p>Neither Map or Log have been selected in the menu so there is nothing to show here.</p>
+			</div>
 		</div>
 
 		<!-- Google Maps -->
@@ -78,14 +124,41 @@
 
 		<!-- Bootstrap Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-		<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 		crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
 		crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-		crossorigin="anonymous"></script> -->
+		crossorigin="anonymous"></script>
+
+		<!-- Bootstrap Table -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+
 		<script>
 			initQsoMapper();
+
+			function toggleElement(element, menuLink) {
+				var currentDisplay = window.getComputedStyle(element).display;
+				if (currentDisplay === 'none') {
+					element.style.display = 'block';
+					menuLink.classList.remove('active');
+				} else {
+					element.style.display = 'none';
+					menuLink.classList.add('active');
+				}
+			}
+
+			function toggleLog(e) {
+				var sender = window.event.target;				
+				var callLog = document.getElementById('call-log');
+				toggleElement(callLog, sender);
+			}
+
+			function toggleMap(e) {
+				var sender = window.event.target;				
+				var mapCanvas = document.getElementById('map-canvas');
+				toggleElement(mapCanvas, sender);
+			}
 		</script>
 	</body>
 </html>

@@ -19,13 +19,14 @@ TODO: Enable loading ADIF files from URL query string and saving in local storag
 	- save in local storage
 */
 
-// var Locator = require('./locator');
-
 /* Names of HTML DOM elements */
 var mapElementName = 'map-canvas';
 var fileUploadFormName = 'fileUpload';
 var fileInputFieldName = 'fileInput';
-var resetButtonName = 'resetMarkers';
+var resetButtonName = 'resetButton';
+
+/* Global list of QSOs */
+var qsos = [];
 
 /* initQsoMapper - main initialization for page
  *
@@ -39,7 +40,7 @@ function initQsoMapper() {
 	document.getElementById(fileInputFieldName).addEventListener('change', handleUploadFile);
 
 	// Call removeAllMarkers when 'Reset' is clicked and reset fileName
-	document.getElementById(resetButtonName).addEventListener('click', handleResetUpload);
+	document.getElementById(resetButtonName).addEventListener('click', handleReset);
 
 	// If a url is specified in the query string, try to load and show markers from it
 	// This allows pre-coding a URL with the ADIF file
@@ -83,12 +84,12 @@ function handleUploadFile() {
 	  }
 }
 
-/* handleResetUpload - handle pressing of the 'reset' button
+/* handleReset - handle pressing of the 'clear' button
  *
- * - Removes any markers from the map
+ * - Removes any markers or polygons from the map
  * - Resets the form so a file with the same name can be loaded again.
  */
-function handleResetUpload() {
+function handleReset() {
 	setFileInputLabel('Select file...');
 	removeAllMarkers();
 	removeAllPolygons();
@@ -101,8 +102,10 @@ function handleResetUpload() {
 function loadQSOsFromFile(file) {
 	var reader = new FileReader();
 	reader.onload = function (e) {
-		var qsos = Adif.parseAdif(e.target.result);
-		addQsosToMap(qsos);
+		var loadedQsos = Adif.parseAdif(e.target.result);
+		addQsosToMap(loadedQsos);
+
+		qsos.push.apply(qsos, loadedQsos);
 	};
 
 	reader.readAsText(file);
@@ -127,8 +130,10 @@ function loadQSOsFromURL(url) {
 	function readyStateChanged() {
 		if (httpRequest.readyState === XMLHttpRequest.DONE) {
 			if (httpRequest.status === 200) {
-				var qsos = parseADIF(httpRequest.responseText);
-				addQsosToMap(qsos);
+				var loadedQsos = parseADIF(httpRequest.responseText);
+				addQsosToMap(loadedQsos);
+
+				qsos.push.apply(qsos, loadedQsos);
 			} else {
 				alert("There was a problem loating " + url);
 			}
@@ -147,9 +152,15 @@ function addQsosToMap(qsos) {
 	for (var q = 0; q < qsos.length; q++) {
 		addMarkerForQso(qsos[q]);
 		addSquareForQSO(qsos[q]);
+
+		$("#call-log").bootstrapTable({ data: qsos });
 	}
 
 	zoomToAllMarkers();
+}
+
+function addLogForQso(qso) {
+
 }
 
 /* addSquareForQso - add a polygon to the map to outline QSO grid square 
