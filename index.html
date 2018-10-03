@@ -116,6 +116,7 @@
 		<script>
 			initQsoMapper();
 
+			// These are UI controls, leaving here for the moment.
 			function toggleElement(element, menuLink) {
 				var currentDisplay = window.getComputedStyle(element).display;
 				if (currentDisplay === 'none') {
@@ -126,7 +127,7 @@
 					menuLink.classList.add('active');
 				}
 
-				_map.invalidateSize()
+				//_map.invalidateSize()
 			}
 
 			function toggleLog(e) {

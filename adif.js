@@ -23,6 +23,7 @@
 	}
 
 	// Series of `<name:len>data` fields
+	/* parseRecord - parse an ADIF record into a QSO object */
 	function parseRecord(record) {
 		var qso = {};
 
@@ -60,6 +61,7 @@
 
 	// `<name:len>data`
 	// <gridsquare:4>FN43
+	/* parseField - parse a single ADIF field into a javascript value */
 	function parseField(field) {
 		// don't capture whitespace at end of field
 		var field_value = field.match(/\<(.+?):.+?\>(.*?)\s*$/);
@@ -70,6 +72,9 @@
 		return null;
 	}
 
+	/* parseCoordinate - parse an ADIF formatted coordinate to decimal.
+	 *
+	 */
 	function parseCoordinate(dms) {
 		if (typeof dms !== "string") {
 			throw "parseCoordinate: Invalid (null) coordinate passed.";

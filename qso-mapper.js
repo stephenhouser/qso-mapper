@@ -52,11 +52,11 @@ function initQsoMapper() {
 		loadQSOsFromURL(url);
 	 }
 
-	// TODO: Remove BootstrapTable jQuery
+	// TODO: Remove BootstrapTable jQuery dependency
 	$('#call-log').on('click-cell.bs.table', function (field, value, row, element) {
 		// TODO: Popping up the popup is leaflet specific
-		if (qso.marker !== null) {
-			qso.marker.openPopup();
+		if (element.marker !== null) {
+			element.marker.openPopup();
 		}
 	});
 }
@@ -100,16 +100,10 @@ function handleUploadFile() {
 function handleReset() {
 	setFileInputLabel('Select file...');
 
-	// removeAllMarkers();
-	// removeAllPolygons();
-	// qsos = [];
 	removeAllQsos();
 
 	var fileUploadForm = document.getElementById(fileUploadFormName);
 	fileUploadForm.reset();
-
-	// TODO: Remove BootstrapTable jQuery
-	$('#call-table').bootstrapTable('removeAll');
 }
 
 /* loadQSOsFromFile - loads QSOs from uploaded file */
@@ -117,7 +111,7 @@ function loadQSOsFromFile(file) {
 	var reader = new FileReader();
 	reader.onload = function (e) {
 		var loadedQsos = Adif.parseAdif(e.target.result);
-		addQsosToMap(loadedQsos);
+		addQsos(loadedQsos);
 	};
 
 	reader.readAsText(file);
@@ -142,10 +136,8 @@ function loadQSOsFromURL(url) {
 	function readyStateChanged() {
 		if (httpRequest.readyState === XMLHttpRequest.DONE) {
 			if (httpRequest.status === 200) {
-				var loadedQsos = parseADIF(httpRequest.responseText);
-				addQsosToMap(loadedQsos);
-
-				qsos.push.apply(qsos, loadedQsos);
+				var loadedQsos = Adif.parseAdif(httpRequest.responseText);
+				addQsos(loadedQsos);
 			} else {
 				alert("There was a problem loating " + url);
 			}
@@ -155,35 +147,39 @@ function loadQSOsFromURL(url) {
 	makeRequest(url);
 }
 
-/* addQsosToMap - load QSOs from an ADIF  (string)
+/* addQsos - load QSOs from an ADIF  (string)
  *
  * - Calls addMarkerFunc(lat, lon, text) for each QSO
  * - Calls zoomToAllMarkers to zoom the map to contain the markers.
  */
-function addQsosToMap(qsos) {
+function addQsos(qsos) {
 	for (var q = 0; q < qsos.length; q++) {
-		addQsoToMap(qsos[q]);
+		addQso(qsos[q]);
 	}
 
- 	// TODO: Remove BootstrapTable jQuery
+	// TODO: Remove BootstrapTable jQuery dependency
 	$('#call-table').bootstrapTable('append', qsos);
 
 	zoomToAllMarkers();
 }
 
+/* removeAllQsos - remove all loaded QSOs from the map and the application */
 function removeAllQsos() {
 	while (qsos.length > 0) {
 		var qso = qsos.pop();
 		removeQso(qso);
 	}
+
+	// TODO: Remove BootstrapTable jQuery dependency
+	$('#call-table').bootstrapTable('removeAll');
 }
 
-/* addQsoToMap - Add a single QSO to the Map
+/* addQso - Add a single QSO to the Map
  *
  * - Calls addMarkerFunc(lat, lon, text) for each QSO
  * - Calls zoomToAllMarkers to zoom the map to contain the markers.
  */
-function addQsoToMap(qso) {
+function addQso(qso) {
 	// Keep copies of the marker in the QSO. Might be a bad idea.
 	qso['marker'] = addMarkerForQso(qso);
 	qso['square'] = addSquareForQSO(qso);
