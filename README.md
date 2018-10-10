@@ -33,6 +33,8 @@ To use this mode of the application, simply supply a `url` parameter to the inde
 
 When using this variant of the application, the `Select file...` and `Reset` are disabled and you are only able to load a single [ADIF file][adif] URL.
 
+You should consider forking the repository if you intend on using this long-term. That way you can change the map tile *access token* to your own token making sure it works for you long-term. If you don't fork and use your own, you run the risk of what I have here running out of quota and not working at all for you.
+
 # Mentions
 
 I wanted to thank the [Linux in the Ham Shack](http://lhspodcast.info) podcast folks, who picked up on my pushing to [GitHub](https://github.com) and mentioned the project in their [Party Like it's 1499](http://lhspodcast.info/2018/10/lhs-episode-251-party-like-its-1499/comment-page-1/#comment-689046) episode. As an ex-scoutmaster for a Boy Scout troop, I think it would be an excellent idea to use QSO Mapper to show your [Jamboree on the Air](https://www.scouting.org/jota/) contacts!
