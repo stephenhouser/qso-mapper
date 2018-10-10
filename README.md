@@ -7,7 +7,9 @@ There are two basic ways this web application is designed to be used:
 1. Uploading local [ADIF files][adif] from a web browser for local display (default).
 2. Using the URL parameter to load a web-accessible [ADIF file][adif] and possibly share your QSOs and map.
 
-Both ways require you to get your own *access token* for the map provider you choose to use. The default map provider is [OpenStreetMap][osm] which is *open* but prefers you get map tiles from a third-party like [MapBox](http://mapbox.com).
+Both ways require you to get your own *access token* for the map provider you choose to use. The default map provider is [OpenStreetMap][osm] which is *open* but prefers you get map tiles from a third-party like [MapBox](http://mapbox.com). If you fork (or clone) this repo for you own use, you should really get an API key from MapBox and change the `mapTileFormat` in `qso-mapper.js` to your access token.
+
+The project stated using [Google Maps][gmaps] but that fork has not been updated. The code is in `google-map.js` and commented out in `index.html` (for now). [OpenStreetMap][osm] and [Leflet][leaflet] are used in the current branch. These are both *open* products.
 
 # Uploading Local ADIF File(s)
 
@@ -31,5 +33,11 @@ To use this mode of the application, simply supply a `url` parameter to the inde
 
 When using this variant of the application, the `Select file...` and `Reset` are disabled and you are only able to load a single [ADIF file][adif] URL.
 
+# Mentions
+
+I wanted to thank the [Linux in the Ham Shack](http://lhspodcast.info) podcast folks, who picked up on my pushing to [GitHub](https://github.com) and mentioned the project in their [Party Like it's 1499](http://lhspodcast.info/2018/10/lhs-episode-251-party-like-its-1499/comment-page-1/#comment-689046) episode. As an ex-scoutmaster for a Boy Scout troop, I think it would be an excellent idea to use QSO Mapper to show your [Jamboree on the Air](https://www.scouting.org/jota/) contacts!
+
   [adif]: http://http://adif.org
   [osm]: https://www.openstreetmap.org
+  [leaflet]: https://leafletjs.com
+  [gmaps]: https://maps.google.com
