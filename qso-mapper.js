@@ -1,9 +1,7 @@
-// Check for the various File API support.
-// if (window.File && window.FileReader && window.FileList && window.Blob) {
-// 	// Great success! All the File APIs are supported.
-// } else {
-// 	alert('The File APIs are not fully supported in this browser.');
-// }
+/* qso-mapper.js - Show Amateur Radio QSOs on an interactive map and table.
+ *
+ * 2020/09/05 Stephen Houser, N1SH
+ */
 
 /*
 TODO: Enable loading ADIF files from URL query string and saving in local storage

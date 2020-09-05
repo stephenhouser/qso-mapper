@@ -1,4 +1,9 @@
 
+/* adif.js - Parse ADIF files (https://adif.org) into JavaScript array of QSOs
+ *
+ * 2020/09/05 Stephen Houser, N1SH
+*/
+
 (function () {
 	function parseAdif(adifFileData) {
 		var qsos = [];

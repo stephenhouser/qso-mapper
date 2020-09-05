@@ -1,19 +1,19 @@
 # QSO Mapper
 
-Show Amatuer Radio QSOs on an interactive map and table.
+Show Amateur Radio QSOs on an interactive map and table.
 
 There are two basic ways this web application is designed to be used:
 
 1. Uploading local [ADIF files][adif] from a web browser for local display (default).
 2. Using the URL parameter to load a web-accessible [ADIF file][adif] and possibly share your QSOs and map.
 
-Both ways require you to get your own *access token* for the map provider you choose to use. The default map provider is [OpenStreetMap][osm] which is *open* but prefers you get map tiles from a third-party like [MapBox](http://mapbox.com). If you fork (or clone) this repo for you own use, you should really get an API key from MapBox and change the `mapTileFormat` in `qso-mapper.js` to your access token.
+Both ways require you to get your own *access token* for the map provider you choose to use. The default map provider is [OpenStreetMap][osm] which is *open* but prefers you get map tiles from a third-party like [MapBox](http://mapbox.com). If you fork (or clone) this repo for you own use, you should really [get an API key from MapBox](https://www.mapbox.com/studio/account/tokens/). Then change the `mapTiles` variable in `leaflet-map.js` to `mapbox` and set `mapAccessToken` to your API token.
 
 The project stated using [Google Maps][gmaps] but that fork has not been updated. The code is in `google-map.js` and commented out in `index.html` (for now). [OpenStreetMap][osm] and [Leflet][leaflet] are used in the current branch. These are both *open* products.
 
 # Uploading Local ADIF File(s)
 
-This method is inteded to be used to view a log of contacts (QSOs) that you have on your computer in [ADIF format][adif]. The application works in this mode by default.
+This method is intended to be used to view a log of contacts (QSOs) that you have on your computer in [ADIF format][adif]. The application works in this mode by default.
 
    [Upload QSO Map Example](https://stephenhouser.com/qso-mapper)
 
@@ -35,11 +35,21 @@ When using this variant of the application, the `Select file...` and `Reset` are
 
 You should consider forking the repository if you intend on using this long-term. That way you can change the map tile *access token* to your own token making sure it works for you long-term. If you don't fork and use your own, you run the risk of what I have here running out of quota and not working at all for you.
 
+# Customization
+
+## Map Tiles
+
+As noted above the default map provider is [OpenStreetMap][osm]. The `mapTiles` variable in `leaflet-map.js` is thus set to `openstreetmap`. To use [MapBox](http://mapbox.com), change this variable to `mapbox` and set the `mapAccessToken` to a proper [API key from MapBox](https://www.mapbox.com/studio/account/tokens/).
+
+## Map Markers 
+
+If you want to use a different marker icon, take a look in `leaflet-map.js` at the function `createMarker()`. There is a brief bit of commented out code that will make a small blue marker from an icon in the `icons` directory.
+
 # Mentions
 
 I wanted to thank the [Linux in the Ham Shack](http://lhspodcast.info) podcast folks, who picked up on my pushing to [GitHub](https://github.com) and mentioned the project in their [Party Like it's 1499](http://lhspodcast.info/2018/10/lhs-episode-251-party-like-its-1499/comment-page-1/#comment-689046) episode. As an ex-scoutmaster for a Boy Scout troop, I think it would be an excellent idea to use QSO Mapper to show your [Jamboree on the Air](https://www.scouting.org/jota/) contacts!
 
-  [adif]: http://http://adif.org
+  [adif]: http://adif.org
   [osm]: https://www.openstreetmap.org
   [leaflet]: https://leafletjs.com
   [gmaps]: https://maps.google.com

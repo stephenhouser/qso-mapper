@@ -1,7 +1,17 @@
-/* Leaflet JS Map Functions (https://leafletjs.com)
+/* leaflet-map.js - Leaflet JS Map Functions (https://leafletjs.com)
  *
- * Using OpenStreetMap (https://www.openstreetmap.org)
+ * Using OpenStreetMap (https://www.openstreetmap.org) or Mapbox (https://mapbox.com)
+ * 
+ * 2020/09/05 Stephen Houser, N1SH
+*/
+
+/* 
+ * Which map tile source to use:
+ * 	'openstreetmap'	-- use https://openstreetmap.org (does not use `mapAccessToken`)
+ *	'mapbox'		-- use https://mapbox.com (requires `mapAccessToken` from mapbox)
  */
+var mapTiles = 'openstreetmap';
+var mapAccessToken = '';	// <-- put your mapbox token here if you are using mapbox, otherwise ignore.
 
 /* Required Map functions:
  *
@@ -22,14 +32,6 @@ var _markerFeatureGroup = null;
 var _polygons = [];
 var _polygonFeatureGroup = null;
 
-var mapAttribution = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-	'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-	'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
-
-var mapTileFormat = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-// For https://mapbox.com use the followng
-// var mapTileFormat = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={access_token}'
-
 /* createMap - Initialize and create map in named section of DOM
  * 
  * Set up any handlers needed by the map and perform any initialization
@@ -38,9 +40,23 @@ var mapTileFormat = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 function createMap(mapDivName) {
 	_map = L.map(mapDivName).setView([43.686292, -70.549876], 3);
 
-	L.tileLayer(mapTileFormat, {
-		attribution: mapAttribution,
-	}).addTo(_map);
+	var mapAttribution = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+	'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+	'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
+
+	if (mapTiles == 'openstreetmap') {
+		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: mapAttribution,
+		}).addTo(_map);
+	} else if (mapTiles == 'mapbox') {
+		L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+			attribution: mapAttribution,
+			id: 'mapbox/streets-v11',
+			accessToken: mapAccessToken
+		}).addTo(_map);
+	} else {
+		alert('Map configuration error: No mapTiles source set. Cannot load maps!');
+	}
 
 	_markerFeatureGroup = new L.featureGroup();
 	_markerFeatureGroup.addTo(_map);
@@ -90,7 +106,17 @@ function removeAllPolygons() {
  * marker is selected.
  */
 function createMarker(latitude, longitude, popupText) {
-	var marker = L.marker([latitude, longitude])
+	// To use a smaller marker, use something like this...
+	// var blueMarkerSmall = L.icon({
+	// 	iconUrl: 'icons/blu-blank.png',
+	// 	iconSize:     [32, 32], // size of the icon
+	// 	iconAnchor:   [16, 32], // point of the icon which will correspond to marker's location
+	// 	popupAnchor:  [0, -16] // point from which the popup should open relative to the iconAnchor
+	// });
+	//var marker = L.marker([latitude, longitude], {icon: blueMarkerSmall});
+
+	var marker = L.marker([latitude, longitude]);
+	
 	marker.addTo(_markerFeatureGroup)
 		.bindPopup(popupText);
 

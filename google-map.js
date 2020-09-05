@@ -1,3 +1,11 @@
+/* google-map.js - Google Maps JS Functions
+ *
+ * Currently this file is not maintained. The project has switched to using
+ * leaflet.js. This code is here for reference and may actually still work.
+ * 
+ * 2020/09/05 Stephen Houser, N1SH
+*/
+
 /* Required Map functions:
  *
  * map = createMap(mapDivName)
