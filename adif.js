@@ -9,13 +9,13 @@
 		var qsos = [];
 
 		// remove all newlines from the file before parsing
-		cleanAdifData = adifFileData.replace(/(\r\n\t|\n|\r\t)/gm, "");
+		cleanAdifData = adifFileData.replace(/(\r\n\t|\n|\r\t|\r\n)/gm, ""); // Added \r\n
 
-		var filePartsMatch = cleanAdifData.match(/(.*)\<eoh>(.*)/);
+		var filePartsMatch = cleanAdifData.match(/(.*)\<eoh>(.*)/i); // added /i for case insensitive
 		if (filePartsMatch && filePartsMatch.length == 3) {
 			body = filePartsMatch[2];
 
-			qsoMatches = body.match(/(.*?)\<eor\>/g);
+			qsoMatches = body.match(/(.*?)\<eor\>/gi); // added /i for case insensitive
 			for (var q = 0; q < qsoMatches.length; q++) {
 				qso = parseRecord(qsoMatches[q]);
 				qsos.push(qso);
@@ -71,7 +71,7 @@
 		// don't capture whitespace at end of field
 		var field_value = field.match(/\<(.+?):.+?\>(.*?)\s*$/);
 		if (field_value !== null) {
-			return [field_value[1], field_value[2]];
+			return [field_value[1].toLowerCase(), field_value[2]]; // lowercased the ADIF fields
 		}
 
 		return null;
