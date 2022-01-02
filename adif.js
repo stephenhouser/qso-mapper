@@ -11,11 +11,11 @@
 		// remove all newlines from the file before parsing
 		cleanAdifData = adifFileData.replace(/(\r\n\t|\n|\r\t)/gm, "");
 
-		var filePartsMatch = cleanAdifData.match(/(.*)\<eoh>(.*)/);
+		var filePartsMatch = cleanAdifData.match(/(.*)\<eoh>(.*)/i);
 		if (filePartsMatch && filePartsMatch.length == 3) {
 			body = filePartsMatch[2];
 
-			qsoMatches = body.match(/(.*?)\<eor\>/g);
+			qsoMatches = body.match(/(.*?)\<eor\>/gi);
 			for (var q = 0; q < qsoMatches.length; q++) {
 				qso = parseRecord(qsoMatches[q]);
 				qsos.push(qso);
