@@ -73,7 +73,7 @@
 		// don't capture whitespace at end of field
 		var field_value = field.match(/\<(.+?):.+?\>(.*?)\s*$/);
 		if (field_value !== null) {
-			return [field_value[1], field_value[2]];
+			return [field_value[1].toLowerCase(), field_value[2]]; // lowercased the ADIF fields
 		}
 
 		return null;
