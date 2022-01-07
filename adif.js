@@ -9,13 +9,15 @@
 		var qsos = [];
 
 		// remove all newlines from the file before parsing
-		cleanAdifData = adifFileData.replace(/(\r\n\t|\n|\r\t|\r\n)/gm, ""); // Added \r\n
+		cleanAdifData = adifFileData.replace(/(\r\n\t|\n|\r\n|\r\t)/gm, "");
 
-		var filePartsMatch = cleanAdifData.match(/(.*)\<eoh>(.*)/i); // added /i for case insensitive
+		console.log(cleanAdifData);
+
+		var filePartsMatch = cleanAdifData.match(/(.*)\<eoh>(.*)/i);
 		if (filePartsMatch && filePartsMatch.length == 3) {
 			body = filePartsMatch[2];
 
-			qsoMatches = body.match(/(.*?)\<eor\>/gi); // added /i for case insensitive
+			qsoMatches = body.match(/(.*?)\<eor\>/gi);
 			for (var q = 0; q < qsoMatches.length; q++) {
 				qso = parseRecord(qsoMatches[q]);
 				qsos.push(qso);
@@ -36,7 +38,7 @@
 		for (var f = 0; f < fields.length; f++) {
 			var f_v = parseField(fields[f]);
 			if (f_v !== null && f_v.length == 2) {
-				qso[f_v[0]] = f_v[1];
+				qso[f_v[0].toLowerCase()] = f_v[1];
 			}
 		}
 
