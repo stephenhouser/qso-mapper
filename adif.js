@@ -117,6 +117,8 @@
 
 			return dd;
 		}
+
+		return dms;
 	}
 
 	function testAll() {
