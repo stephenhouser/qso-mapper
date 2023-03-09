@@ -11,10 +11,11 @@
 		// remove all newlines from the file before parsing
 		cleanAdifData = adifFileData.replace(/(\r\n\t|\n|\r\n|\r\t)/gm, "");
 
-		console.log(cleanAdifData);
+		//console.log(cleanAdifData);
 
 		var filePartsMatch = cleanAdifData.match(/(.*)\<eoh>(.*)/i);
 		if (filePartsMatch && filePartsMatch.length == 3) {
+			header = filePartsMatch[1];
 			body = filePartsMatch[2];
 
 			qsoMatches = body.match(/(.*?)\<eor\>/gi);
@@ -26,7 +27,7 @@
 			throw "Invalid ADIF file. Cannot find header marker <eoh>.";
 		}
 
-		return qsos;
+		return [header, qsos];
 	}
 
 	// Series of `<name:len>data` fields

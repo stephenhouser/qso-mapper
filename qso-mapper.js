@@ -104,11 +104,21 @@ function handleReset() {
 	fileUploadForm.reset();
 }
 
+function setTitle(title) {
+	if (title.startsWith('# ')) {
+		var navBrand = document.getElementsByClassName('navbar-brand');
+		for (let i = 0; i < navBrand.length; i++) {
+			navBrand[i].textContent = title.substring(2);
+		}
+	}
+}
+
 /* loadQSOsFromFile - loads QSOs from uploaded file */
 function loadQSOsFromFile(file) {
 	var reader = new FileReader();
 	reader.onload = function (e) {
-		var loadedQsos = Adif.parseAdif(e.target.result);
+		var [header, loadedQsos] = Adif.parseAdif(e.target.result);
+		setTitle(header);
 		addQsos(loadedQsos);
 	};
 
@@ -134,7 +144,8 @@ function loadQSOsFromURL(url) {
 	function readyStateChanged() {
 		if (httpRequest.readyState === XMLHttpRequest.DONE) {
 			if (httpRequest.status === 200) {
-				var loadedQsos = Adif.parseAdif(httpRequest.responseText);
+				var [header, loadedQsos] = Adif.parseAdif(httpRequest.responseText);
+				setTitle(header);
 				addQsos(loadedQsos);
 			} else {
 				alert("There was a problem loating " + url);
