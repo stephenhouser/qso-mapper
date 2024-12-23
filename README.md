@@ -25,7 +25,7 @@ When using the application this way, the map is not directly sharable with other
 
 This method allows you to show and share a log of your contacts. You upload your [ADIF file][adif] to a website and then others can see the QSOs mapped directly, without uploading anything.
 
-   [Shared QSO Map Example](https://stephenhouser.com/qso-mapper?url=sample/short.adi)
+   [Shared QSO Map Example](https://stephenhouser.com/qso-mapper?url=sample/short.adi&qth=43.86,-70.55)
 
 The application loads a web-accessible [ADIF file][adif] and displays it on the map. The file could be on another server or in the same location (or same repository) as the application code.
 
@@ -41,9 +41,13 @@ You should consider forking the repository if you intend on using this long-term
 
 As noted above the default map provider is [OpenStreetMap][osm]. The `mapTiles` variable in `leaflet-map.js` is thus set to `openstreetmap`. To use [MapBox](http://mapbox.com), change this variable to `mapbox` and set the `mapAccessToken` to a proper [API key from MapBox](https://www.mapbox.com/studio/account/tokens/).
 
+## Showing Your QTH
+
+If you append `&qth=<lat>,<lon>` to the URL you can also show a **QTH** marker. Lat and lon are decimal. By default this marker is red, but can be changed in the css using the `.qth-icon` class. Just change the `filter: hue-rotate(120deg);` to a suitable hue rotation to get the color you want. The Shared QSO Map Example above uses this feature.
+
 ## Map Markers 
 
-If you want to use a different marker icon, take a look in `leaflet-map.js` at the function `createMarker()`. There is a brief bit of commented out code that will make a small blue marker from an icon in the `icons` directory.
+If you want to use a different marker icon, take a look in `leaflet-map.js` at the function `createMarker()`. There is a brief bit of commented out code that will make a small blue marker from an icon in the `icons` directory. You can also use the `hue-rotate` trick used in the Showing Your QTH section and just change the color of the current markers to your liking.
 
 # Mentions
 

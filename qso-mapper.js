@@ -222,7 +222,6 @@ function removeQso(qso) {
  */
 function createQTHMarker(latlong, popupText) {
 	const [latitude, longitude] = latlong.split(',');
-
 	const popupDiv = '<div class="qth">' +
 					 '<h1>' + popupText + '</h1><hr/>' +
 					 '</div>';
