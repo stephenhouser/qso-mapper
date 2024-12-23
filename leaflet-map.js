@@ -105,7 +105,7 @@ function removeAllPolygons() {
  * Set up a marker on the map and corresponding pop-up for when the
  * marker is selected.
  */
-function createMarker(latitude, longitude, popupText) {
+function createMarker(latitude, longitude, popupText, options={}) {
 	// To use a smaller marker, use something like this...
 	// var blueMarkerSmall = L.icon({
 	// 	iconUrl: 'icons/blu-blank.png',
@@ -115,7 +115,7 @@ function createMarker(latitude, longitude, popupText) {
 	// });
 	//var marker = L.marker([latitude, longitude], {icon: blueMarkerSmall});
 
-	var marker = L.marker([latitude, longitude]);
+	var marker = L.marker([latitude, longitude], options);
 	
 	marker.addTo(_markerFeatureGroup)
 		.bindPopup(popupText);

@@ -41,6 +41,11 @@ body {
 	background: white;
 }
 
+.qth-icon {
+	/* https://stackoverflow.com/questions/23567203/leaflet-changing-marker-color */
+	filter: hue-rotate(120deg);
+}
+
 .background {
 	padding: 3em;
 	position: absolute;
