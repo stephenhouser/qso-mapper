@@ -218,38 +218,42 @@ function removeQso(qso) {
  * when the marker is selected.
  */
 function createQTHMarker(latlong, popupText) {
-        // To use a smaller marker, use something like this...
-        var blueMarkerSmall = L.icon({
-                iconUrl: 'icons/ylw-blank.png',
-                iconSize:     [32, 32], // size of the icon
-                iconAnchor:   [16, 32], // point of the icon which will correspond to marker's location
-                popupAnchor:  [0, -16] // point from which the popup should open relative to the iconAnchor
-        });
-        var [latitude, longitude] = latlong.split(',');
-        var marker = L.marker([latitude, longitude], {icon: blueMarkerSmall, zIndexOffset: 1000});
+	// To use a smaller marker, use something like this...
+	var blueMarkerSmall = L.icon({
+		iconUrl: 'icons/ylw-blank.png',
+		iconSize:     [32, 32], // size of the icon
+		iconAnchor:   [16, 32], // point of the icon which will correspond to marker's location
+		popupAnchor:  [0, -16] // point from which the popup should open relative to the iconAnchor
+	});
 
-        marker.addTo(_markerFeatureGroup)
-                .bindPopup(popupText);
+	var [latitude, longitude] = latlong.split(',');
+	var marker = L.marker([latitude, longitude], {icon: blueMarkerSmall, zIndexOffset: 1000});
 
-        _markers.push(marker);
-        return marker;
+	marker.addTo(_markerFeatureGroup)
+		  .bindPopup(popupText);
+
+	_markers.push(marker);
+	return marker;
 }
 
 /* addMarkerforQth - add a marker to the map for a given operating location */
+
+/* TODO: Does not look like this function is used anywhere, remove in next revision
 function addMarkerForQth(qth) {
-        var latlon = latLonForQso(qth);
-        if (latlon == null) {
-                return null;
-        }
+	var latlon = latLonForQso(qth);
+	if (latlon == null) {
+			return null;
+	}
 
-        var [latitude, longitude] = latlon;
-        var popupText = '<div class="qth">' +
-                '<h1>' + qth.call + '</h1><hr/>' +
-                '</div>';
+	var [latitude, longitude] = latlon;
+	var popupText = '<div class="qth">' +
+			'<h1>' + qth.call + '</h1><hr/>' +
+			'</div>';
 
-        marker = createMarker(latitude, longitude, popupText);
-        return marker;
+	marker = createMarker(latitude, longitude, popupText);
+	return marker;
 }
+*/
 
 /* addMarkerForQso - add a marker to the map for a given QSO */
 function addMarkerForQso(qso) {

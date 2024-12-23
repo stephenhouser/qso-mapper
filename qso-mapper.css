@@ -3,7 +3,7 @@
  * 2020/09/05 Stephen Houser, N1SH
  */
 
- html, body {
+html, body {
 	height: 100%;
 	width: 100%;
 }
@@ -28,11 +28,9 @@ body {
 }
 
 #map-canvas {
-	/* height: calc ( 100vh - 6rem ); */
 	display: block;
 	height: 100%;
 	width: 100%;
-  /* border: 2px dashed black; */
 }
 
 #call-log {
@@ -51,7 +49,6 @@ body {
 	z-index: -10;
 	width: 100%
 }
-
 
 .qth h1 {
 	font-size: 2rem;

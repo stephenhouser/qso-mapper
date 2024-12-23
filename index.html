@@ -132,8 +132,6 @@
 					element.style.display = 'none';
 					menuLink.classList.add('active');
 				}
-
-				//_map.invalidateSize()
 			}
 
 			function toggleLog(e) {
@@ -147,17 +145,15 @@
 				var mapCanvas = document.getElementById('map-canvas');
 				toggleElement(mapCanvas, sender);
 			}
-                        // If a lat/long is specified in the query string, try to use it as the
-                        // QTH/Operating location for the log file.
-                        // This allows for semi-obvious location-range mapping
-                        // ex: qth=22.303940,114.170372 will place a yellow marker at 22.3, 114.1 on the map
-                        var qth = getQueryVariable('qth');
-                        if (qth !== null) {
-                                createQTHMarker(qth, "Home QTH")
-                                //createQTHMarker(40.786, -73.961, "Home QTH")
-                        }
 
-
+			// If a lat/long is specified in the query string, try to use it as the
+			// QTH/Operating location for the log file.
+			// This allows for semi-obvious location-range mapping
+			// ex: qth=22.303940,114.170372 will place a yellow marker at 22.3, 114.1 on the map
+			var qth = getQueryVariable('qth');
+			if (qth !== null) {
+					createQTHMarker(qth, "Home QTH")
+			}
 		</script>
 	</body>
 </html>
