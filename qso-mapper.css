@@ -52,6 +52,11 @@ body {
 	width: 100%
 }
 
+
+.qth h1 {
+	font-size: 2rem;
+}
+
 .qso h1 {
 	font-size: 2rem;
 }

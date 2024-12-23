@@ -212,6 +212,45 @@ function removeQso(qso) {
 	}
 }
 
+/* createQTHMarker - create a marker on the map at the given position.
+ *
+ * Set up a marker on the map for operating QTH and corresponding pop-up for
+ * when the marker is selected.
+ */
+function createQTHMarker(latlong, popupText) {
+        // To use a smaller marker, use something like this...
+        var blueMarkerSmall = L.icon({
+                iconUrl: 'icons/ylw-blank.png',
+                iconSize:     [32, 32], // size of the icon
+                iconAnchor:   [16, 32], // point of the icon which will correspond to marker's location
+                popupAnchor:  [0, -16] // point from which the popup should open relative to the iconAnchor
+        });
+        var [latitude, longitude] = latlong.split(',');
+        var marker = L.marker([latitude, longitude], {icon: blueMarkerSmall, zIndexOffset: 1000});
+
+        marker.addTo(_markerFeatureGroup)
+                .bindPopup(popupText);
+
+        _markers.push(marker);
+        return marker;
+}
+
+/* addMarkerforQth - add a marker to the map for a given operating location */
+function addMarkerForQth(qth) {
+        var latlon = latLonForQso(qth);
+        if (latlon == null) {
+                return null;
+        }
+
+        var [latitude, longitude] = latlon;
+        var popupText = '<div class="qth">' +
+                '<h1>' + qth.call + '</h1><hr/>' +
+                '</div>';
+
+        marker = createMarker(latitude, longitude, popupText);
+        return marker;
+}
+
 /* addMarkerForQso - add a marker to the map for a given QSO */
 function addMarkerForQso(qso) {
 	var latlon = latLonForQso(qso);
