@@ -45,7 +45,7 @@ function createMap(mapDivName) {
 	'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
 
 	if (mapTiles == 'openstreetmap') {
-		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			attribution: mapAttribution,
 		}).addTo(_map);
 	} else if (mapTiles == 'mapbox') {
