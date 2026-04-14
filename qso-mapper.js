@@ -45,6 +45,9 @@ function initQsoMapper() {
 	// https://stephenhouser.com/qso-mapper?url=sample/short.adi
 	// https://stephenhouser.com/qso-mapper?url=https://stephenhouser.com/qso-mapper/sample/short.adi
 	var url = getQueryVariable('url');
+	if (ADIF_URL !== null && ADIF_URL !== '') {
+		url = ADIF_URL;
+	}
 	if (url !== null) {
 		disableFileUpload();
 		loadQSOsFromURL(url);

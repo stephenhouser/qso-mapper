@@ -33,6 +33,14 @@ To use this mode of the application, simply supply a `url` parameter to the inde
 
 When using this variant of the application, the `Select file...` and `Reset` are disabled and you are only able to load a single [ADIF file][adif] URL.
 
+When building with Docker, you can pass the `ADIF_URL` build arg to set the default URL to load. For example:
+
+```bash
+docker buildx build --build-arg ADIF_URL=sample/short.adi -t qso-mapper .
+```
+
+When set, the `ADIF_URL` takes precedence over the `url` parameter in the URL.
+
 You should consider forking the repository if you intend on using this long-term. That way you can change the map tile *access token* to your own token making sure it works for you long-term. If you don't fork and use your own, you run the risk of what I have here running out of quota and not working at all for you.
 
 # Customization
@@ -48,6 +56,26 @@ If you append `&qth=<lat>,<lon>` to the URL you can also show a **QTH** marker. 
 ## Map Markers 
 
 If you want to use a different marker icon, take a look in `leaflet-map.js` at the function `createMarker()`. There is a brief bit of commented out code that will make a small blue marker from an icon in the `icons` directory. You can also use the `hue-rotate` trick used in the Showing Your QTH section and just change the color of the current markers to your liking.
+
+## Default ADIF File
+
+If you want to set a default ADIF file to load when the application starts, you can set the `ADIF_URL` variable in `index.html`. This overrides the `url` parameter, making the app load only the file specified.
+
+## Page Title
+
+By default, the page title is `QSO/ADIF Mapper`. If using the `scripts/build.sh` script (the default in Docker) you can pass the `TITLE` environment variable to set the page title. For example:
+
+```bash
+docker buildx build --build-arg TITLE="My QSO Mapper" -t qso-mapper .
+```
+
+## Brand
+
+By default, the brand (the title in the top left of the page) is `QSO Mapper`. If using the `scripts/build.sh` script (the default in Docker) you can pass the `BRAND` environment variable to set the brand. For example:
+
+```bash
+docker buildx build --build-arg BRAND="My QSO Mapper" -t qso-mapper .
+```
 
 # Mentions
 

@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qso-mapper
+  namespace: default
+  labels:
+    app: qso-mapper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qso-mapper
+  template:
+    metadata:
+      labels:
+        app: qso-mapper
+    spec:
+      containers:
+      - name: qso-mapper
+        image: registry.example.com/qso-mapper:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+            name: http
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
